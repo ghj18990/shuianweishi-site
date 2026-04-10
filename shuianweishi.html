@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>水安卫士</title>
+  <style>
+    :root {
+      --bg-1: #071a2f;
+      --bg-2: #0a3155;
+      --brand: #20c4f4;
+      --brand-2: #5ef0c2;
+      --text: #eef8ff;
+      --muted: #b6d0e4;
+      --card: rgba(255,255,255,0.08);
+      --line: rgba(255,255,255,0.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(94,240,194,0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(32,196,244,0.22), transparent 32%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+      min-height: 100vh;
+    }
+
+    .wrap {
+      width: min(1200px, calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    header {
+      padding: 24px 0 10px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 18px 22px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(14px);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.18);
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .logo-mark {
+      width: 84px;
+      height: 84px;
+      border-radius: 22px;
+      background: linear-gradient(145deg, var(--brand), var(--brand-2));
+      display: grid;
+      place-items: center;
+      color: #06233d;
+      font-size: 38px;
+      font-weight: 900;
+      box-shadow: 0 14px 30px rgba(32,196,244,0.28);
+    }
+
+    .logo-text h1 {
+      margin: 0;
+      font-size: clamp(30px, 4.6vw, 54px);
+      line-height: 1;
+      letter-spacing: 2px;
+      font-weight: 900;
+    }
+
+    .logo-text p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      letter-spacing: 1px;
+    }
+
+    .badge {
+      white-space: nowrap;
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(94,240,194,0.45);
+      color: #d7fff3;
+      background: rgba(94,240,194,0.08);
+      font-size: 14px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 24px;
+      padding: 28px 0 40px;
+      align-items: stretch;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      background: var(--card);
+      backdrop-filter: blur(14px);
+      border-radius: 28px;
+      padding: 34px;
+      box-shadow: 0 22px 70px rgba(0,0,0,0.22);
+    }
+
+    .hero h2 {
+      margin: 0 0 18px;
+      font-size: clamp(30px, 4vw, 58px);
+      line-height: 1.08;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.8;
+    }
+
+    .actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    .btn {
+      padding: 14px 22px;
+      border-radius: 14px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform .18s ease, opacity .18s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      color: #04243b;
+    }
+
+    .btn-secondary {
+      border: 1px solid var(--line);
+      color: var(--text);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    .stat {
+      padding: 18px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .feature-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 14px;
+    }
+
+    .feature-list li {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: var(--text);
+    }
+
+    .feature-list small {
+      display: block;
+      color: var(--muted);
+      margin-top: 6px;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .badge {
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="topbar">
+        <div class="logo-group">
+          <div class="logo-mark">水</div>
+          <div class="logo-text">
+            <h1>水安卫士</h1>
+            <p>智慧水务安全监测与应急预警平台</p>
+          </div>
+        </div>
+        <div class="badge">7×24 实时监测 · 风险预警 · 设备联动</div>
+      </div>
+    </header>
+
+    <main class="hero">
+      <section class="panel">
+        <h2>让水域安全<br>看得见、管得住、响应快</h2>
+        <p>
+          水安卫士聚焦水域安全治理、重点区域巡检、风险预警与应急响应，
+          通过可视化看板、设备联动和事件闭环管理，帮助管理单位构建更高效的安全防控体系。
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#">立即体验</a>
+          <a class="btn btn-secondary" href="#">查看解决方案</a>
+        </div>
+      </section>
+
+      <aside class="panel">
+        <div class="stats">
+          <div class="stat">
+            <strong>24h</strong>
+            <span>全天候自动巡检与水域状态监控</span>
+          </div>
+          <div class="stat">
+            <strong>秒级</strong>
+            <span>异常事件快速识别与预警推送</span>
+          </div>
+          <div class="stat">
+            <strong>多端</strong>
+            <span>支持大屏、网页、移动端协同查看</span>
+          </div>
+          <div class="stat">
+            <strong>闭环</strong>
+            <span>从发现、处置到复盘一体化管理</span>
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <section class="panel" style="margin-bottom:40px;">
+      <h3 style="margin-top:0;font-size:28px;">核心能力</h3>
+      <ul class="feature-list">
+        <li>
+          智能预警
+          <small>对重点水域、设备状态、异常行为进行实时监测并及时告警。</small>
+        </li>
+        <li>
+          应急联动
+          <small>支持告警分级、任务派发、处置回传与结果闭环，提升响应效率。</small>
+        </li>
+        <li>
+          数据可视化
+          <small>用统一看板呈现风险态势、巡检记录、事件统计和趋势分析。</small>
+        </li>
+      </ul>
+    </section>
+  </div>
+</body>
+</html>
