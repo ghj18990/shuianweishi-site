@@ -120,9 +120,9 @@
     }
 
     .panel {
-      background: var(--card);
+      background: linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.045));
       border: 1px solid var(--line);
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.08);
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
       border-radius: var(--radius-xl);
@@ -245,6 +245,21 @@
       z-index: 0;
     }
 
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -12px;
+      transform: translateX(-50%);
+      width: min(1240px, calc(100% - 28px));
+      height: 170px;
+      border-radius: 0 0 44px 44px;
+      background: linear-gradient(180deg, rgba(47,211,255,.06), rgba(47,211,255,.02) 35%, transparent);
+      filter: blur(2px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
     .hero-grid {
       display: grid;
       grid-template-columns: 1.02fr .98fr;
@@ -259,6 +274,13 @@
       padding: 36px;
       position: relative;
       overflow: hidden;
+    }
+
+    .hero-copy {
+      min-height: 660px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
 
     .hero-copy::before,
@@ -294,10 +316,11 @@
     }
 
     .gradient-text {
-      background: linear-gradient(135deg, #ffffff, var(--brand), #ffd7df);
+      background: linear-gradient(135deg, #ffffff 10%, #8decff 40%, #ffd7df 80%, #fff 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
+      text-shadow: none;
     }
 
     .hero-copy p {
@@ -312,7 +335,9 @@
       display: flex;
       flex-wrap: wrap;
       gap: 14px;
-      margin-top: 26px;
+      margin-top: 30px;
+      position: relative;
+      z-index: 1;
     }
 
     .btn {
@@ -327,7 +352,10 @@
       transition: .18s ease;
     }
 
-    .btn:hover { transform: translateY(-2px); }
+    .btn:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 18px 40px rgba(0,0,0,.22);
+    }
 
     .btn-primary {
       color: #09283f;
@@ -351,7 +379,9 @@
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
-      margin-top: 28px;
+      margin-top: 30px;
+      position: relative;
+      z-index: 1;
     }
 
     .stat {
@@ -379,7 +409,26 @@
       flex-direction: column;
       gap: 16px;
       position: relative;
-      min-height: 660px;
+      min-height: 700px;
+    }
+
+    .hero-visual::after {
+      content: "";
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      right: 40px;
+      top: 30px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(47,211,255,.22), rgba(47,211,255,.02) 58%, transparent 70%);
+      filter: blur(6px);
+      pointer-events: none;
+      animation: pulseRing 5.5s ease-in-out infinite;
+    }
+
+    @keyframes pulseRing {
+      0%, 100% { transform: scale(.96); opacity: .72; }
+      50% { transform: scale(1.03); opacity: 1; }
     }
 
     .carousel {
@@ -396,19 +445,30 @@
     .slides {
       height: 100%;
       position: relative;
+      overflow: hidden;
+    }
+
+    .slides::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,.08);
+      z-index: 3;
+      pointer-events: none;
     }
 
     .slide {
       position: absolute;
       inset: 0;
       opacity: 0;
-      transform: scale(1.05);
-      transition: opacity .8s ease, transform .8s ease;
+      transform: scale(1.08) translateY(10px);
+      transition: opacity .9s ease, transform .9s ease;
     }
 
     .slide.active {
       opacity: 1;
-      transform: scale(1);
+      transform: scale(1) translateY(0);
       z-index: 2;
     }
 
@@ -418,6 +478,7 @@
       object-fit: cover;
       display: block;
       background: #0d2031;
+      filter: saturate(1.08) contrast(1.03);
     }
 
     .slide::after {
@@ -466,7 +527,7 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      z-index: 4;
+      z-index: 6;
     }
 
     .arrow {
@@ -474,18 +535,19 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 50px;
-      height: 50px;
+      width: 54px;
+      height: 54px;
       border-radius: 50%;
       border: 1px solid rgba(255,255,255,.18);
-      background: rgba(5, 18, 30, .48);
+      background: rgba(5, 18, 30, .56);
       color: #fff;
       cursor: pointer;
       display: grid;
       place-items: center;
       font-size: 24px;
-      backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
       transition: .18s ease;
+      box-shadow: 0 10px 28px rgba(0,0,0,.22);
     }
 
     .arrow:hover { background: rgba(255,255,255,.12); }
@@ -495,11 +557,16 @@
     .dots {
       position: absolute;
       left: 50%;
-      bottom: 18px;
+      bottom: 22px;
       transform: translateX(-50%);
-      z-index: 5;
+      z-index: 6;
       display: flex;
       gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(4,14,24,.36);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.08);
     }
 
     .dot {
@@ -532,14 +599,19 @@
     }
 
     .patent-card {
-      width: 74px;
-      height: 96px;
-      border-radius: 14px;
+      width: 78px;
+      height: 102px;
+      border-radius: 16px;
       overflow: hidden;
       border: 1px solid rgba(255,255,255,.22);
       background: rgba(255,255,255,.08);
-      box-shadow: 0 10px 20px rgba(0,0,0,.18);
+      box-shadow: 0 12px 24px rgba(0,0,0,.2);
       backdrop-filter: blur(6px);
+      transition: transform .18s ease;
+    }
+
+    .patent-card:hover {
+      transform: translateY(-4px);
     }
 
     .patent-card img {
@@ -550,12 +622,38 @@
     }
 
     .patent-label {
-      padding: 8px 12px;
+      padding: 9px 13px;
       border-radius: 999px;
-      background: rgba(6,18,29,.7);
+      background: rgba(6,18,29,.78);
       color: #fff;
       font-size: 12px;
       border: 1px solid rgba(255,255,255,.14);
+      letter-spacing: .6px;
+    }
+
+    .hud-stack {
+      position: absolute;
+      right: 20px;
+      top: 18px;
+      z-index: 7;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: flex-end;
+      pointer-events: none;
+    }
+
+    .hud-pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(4,14,24,.72), rgba(4,14,24,.38));
+      border: 1px solid rgba(255,255,255,.12);
+      color: #eaf7ff;
+      font-size: 12px;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 8px 20px rgba(0,0,0,.18);
     }
 
     .section {
@@ -579,7 +677,6 @@
       position: relative;
       z-index: 1;
     }
-    }
 
     .section-lead {
       margin: 0 0 22px;
@@ -591,11 +688,35 @@
       z-index: 1;
     }
 
-    .feature-grid,
-    .scene-grid,
-    .adv-grid {
-      display: grid;
-      gap: 18px;
+    .wave-divider {
+      position: relative;
+      height: 92px;
+      margin: 8px 0 2px;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .wave-divider::before,
+    .wave-divider::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 100%;
+      background-repeat: repeat-x;
+      background-size: 1100px 100%;
+    }
+
+    .wave-divider::before {
+      opacity: .34;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 180'%3E%3Cpath fill='%2317c4ff' fill-opacity='1' d='M0,96L40,90.7C80,85,160,75,240,64C320,53,400,43,480,58.7C560,75,640,117,720,128C800,139,880,117,960,90.7C1040,64,1120,32,1200,32C1280,32,1360,64,1400,80L1440,96L1440,181L1400,181C1360,181,1280,181,1200,181C1120,181,1040,181,960,181C880,181,800,181,720,181C640,181,560,181,480,181C400,181,320,181,240,181C160,181,80,181,40,181L0,181Z'/%3E%3C/svg%3E");
+      animation: waveMove 18s linear infinite;
+    }
+
+    .wave-divider::after {
+      opacity: .16;
+      transform: translateY(18px);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 180'%3E%3Cpath fill='%23ff5576' fill-opacity='1' d='M0,128L48,133.3C96,139,192,149,288,138.7C384,128,480,96,576,80C672,64,768,64,864,80C960,96,1056,128,1152,122.7C1248,117,1344,75,1392,53.3L1440,32L1440,181L1392,181C1344,181,1248,181,1152,181C1056,181,960,181,864,181C768,181,672,181,576,181C480,181,384,181,288,181C192,181,96,181,48,181L0,181Z'/%3E%3C/svg%3E");
+      animation: waveMove 28s linear infinite reverse;
     }
 
     .feature-grid {
@@ -843,6 +964,11 @@
 
         <div class="hero-visual panel">
           <div class="carousel" aria-label="产品展示轮播">
+            <div class="hud-stack" aria-hidden="true">
+              <div class="hud-pill">AI Risk Detection</div>
+              <div class="hud-pill">Remote Visual Control</div>
+              <div class="hud-pill">Emergency Linkage</div>
+            </div>
             <div class="slides">
               <div class="slide active">
                 <img src="assets/image6.jpeg" alt="水安卫士产品展示图" />
@@ -895,6 +1021,8 @@
         </div>
       </div>
     </section>
+
+    <div class="wave-divider" aria-hidden="true"></div>
 
     <section class="section" id="features">
       <div class="container">
