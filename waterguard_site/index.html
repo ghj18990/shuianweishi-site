@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>水安卫士｜全水域智能救援柜</title>
+  <meta name="description" content="水安卫士，全水域智能救援柜。集智能监测、风险预警、远程可视化监管、应急救援联动于一体，适用于河道、湖泊、水库、景区及社区等多类高风险水域。" />
+  <style>
+    :root {
+      --bg-1: #06162b;
+      --bg-2: #0a2f58;
+      --bg-3: #0e5b8f;
+      --brand: #2fd3ff;
+      --brand-deep: #0ea5e9;
+      --red: #ff5a72;
+      --red-deep: #ff2f56;
+      --gold: #ffd166;
+      --text: #ecf8ff;
+      --muted: #bfd8ea;
+      --line: rgba(255,255,255,0.14);
+      --card: rgba(255,255,255,0.08);
+      --card-strong: rgba(255,255,255,0.12);
+      --shadow: 0 24px 80px rgba(0,0,0,.28);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(47,211,255,.16), transparent 24%),
+        radial-gradient(circle at 88% 12%, rgba(255,90,114,.14), transparent 20%),
+        radial-gradient(circle at 50% 80%, rgba(14,165,233,.12), transparent 25%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 55%, var(--bg-3));
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: auto;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(90px);
+      opacity: .45;
+    }
+
+    body::before {
+      width: 340px;
+      height: 340px;
+      left: -60px;
+      top: 100px;
+      background: rgba(47,211,255,.2);
+    }
+
+    body::after {
+      width: 300px;
+      height: 300px;
+      right: -50px;
+      top: 220px;
+      background: rgba(255,90,114,.22);
+    }
+
+    .container {
+      width: min(1220px, calc(100% - 28px));
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: var(--radius-xl);
+    }
+
+    header {
+      padding: 18px 0 8px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .nav-wrap {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 18px;
+      padding: 16px 18px;
+      border-radius: 24px;
+      background: rgba(5, 17, 31, .52);
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .brandbox {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 68px;
+      height: 68px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, var(--brand), var(--red));
+      color: #07243a;
+      font-size: 30px;
+      font-weight: 900;
+      box-shadow: 0 14px 30px rgba(47,211,255,.24);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 25%, rgba(255,255,255,.42), transparent 70%);
+      transform: translateX(-150%);
+      animation: shine 4.8s linear infinite;
+    }
+
+    @keyframes shine {
+      100% { transform: translateX(150%); }
+    }
+
+    .brandtext h1 {
+      margin: 0;
+      font-size: clamp(28px, 4.2vw, 52px);
+      line-height: 1;
+      letter-spacing: 2px;
+      font-weight: 900;
+    }
+
+    .brandtext p {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      letter-spacing: 1.5px;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-size: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      transition: .18s ease;
+    }
+
+    nav a:hover { transform: translateY(-2px); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--red), #ff8da1) !important;
+      color: #fff !important;
+      border: none !important;
+      font-weight: 800;
+    }
+
+    .hero {
+      padding: 22px 0 16px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.02fr .98fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .hero-copy,
+    .hero-visual { padding: 34px; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 13px;
+      letter-spacing: .5px;
+      background: linear-gradient(135deg, rgba(47,211,255,.16), rgba(255,90,114,.18));
+      border: 1px solid rgba(255,255,255,.14);
+      margin-bottom: 18px;
+    }
+
+    .hero-copy h2 {
+      margin: 0 0 16px;
+      font-size: clamp(34px, 5vw, 64px);
+      line-height: 1.04;
+      letter-spacing: .5px;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #ffffff, var(--brand), #ffd7df);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.9;
+    }
+
+    .cta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 26px;
+    }
+
+    .btn {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 16px;
+      padding: 15px 22px;
+      font-weight: 800;
+      transition: .18s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); }
+
+    .btn-primary {
+      color: #09283f;
+      background: linear-gradient(135deg, var(--brand), #95f0ff);
+      box-shadow: 0 14px 30px rgba(47,211,255,.22);
+    }
+
+    .btn-red {
+      color: #fff;
+      background: linear-gradient(135deg, var(--red-deep), #ff7d95);
+      box-shadow: 0 14px 30px rgba(255,90,114,.22);
+    }
+
+    .btn-ghost {
+      color: var(--text);
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .stat {
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 6px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .hero-visual {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      position: relative;
+      min-height: 620px;
+    }
+
+    .carousel {
+      position: relative;
+      flex: 1;
+      border-radius: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.14);
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.03));
+      min-height: 430px;
+    }
+
+    .slides {
+      height: 100%;
+      position: relative;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: scale(1.05);
+      transition: opacity .8s ease, transform .8s ease;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: scale(1);
+      z-index: 2;
+    }
+
+    .slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: #0d2031;
+    }
+
+    .slide::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(8,20,35,.1), rgba(6,18,29,.1) 45%, rgba(6,18,29,.82));
+    }
+
+    .slide-caption {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 22px;
+      z-index: 3;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: end;
+    }
+
+    .slide-caption .text {
+      max-width: 76%;
+    }
+
+    .slide-caption h3 {
+      margin: 0 0 6px;
+      font-size: clamp(20px, 3vw, 32px);
+    }
+
+    .slide-caption p {
+      margin: 0;
+      color: #d7ebf7;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .nav-arrows {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 4;
+    }
+
+    .arrow {
+      pointer-events: auto;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(5, 18, 30, .48);
+      color: #fff;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      backdrop-filter: blur(8px);
+      transition: .18s ease;
+    }
+
+    .arrow:hover { background: rgba(255,255,255,.12); }
+    .arrow.prev { left: 16px; }
+    .arrow.next { right: 16px; }
+
+    .dots {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      z-index: 5;
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(255,255,255,.35);
+      cursor: pointer;
+      padding: 0;
+      transition: .18s ease;
+    }
+
+    .dot.active {
+      width: 28px;
+      background: linear-gradient(135deg, var(--brand), var(--red));
+    }
+
+    .patent-bar {
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      z-index: 6;
+      display: flex;
+      gap: 10px;
+      align-items: end;
+      flex-wrap: wrap;
+      max-width: calc(100% - 36px);
+    }
+
+    .patent-card {
+      width: 74px;
+      height: 96px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.08);
+      box-shadow: 0 10px 20px rgba(0,0,0,.18);
+      backdrop-filter: blur(6px);
+    }
+
+    .patent-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .patent-label {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(6,18,29,.7);
+      color: #fff;
+      font-size: 12px;
+      border: 1px solid rgba(255,255,255,.14);
+    }
+
+    .section {
+      padding: 14px 0 20px;
+    }
+
+    .section-title {
+      margin: 0 0 16px;
+      font-size: clamp(26px, 3vw, 40px);
+    }
+
+    .section-lead {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.85;
+      max-width: 900px;
+    }
+
+    .feature-grid,
+    .scene-grid,
+    .adv-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .feature-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .scene-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .adv-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
+      padding: 22px;
+      border-radius: 24px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .feature-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 14px;
+      background: linear-gradient(135deg, rgba(47,211,255,.2), rgba(255,90,114,.18));
+      border: 1px solid rgba(255,255,255,.14);
+      font-size: 26px;
+    }
+
+    .card h3, .card h4 {
+      margin: 0 0 10px;
+      font-size: 20px;
+    }
+
+    .card p, .card li {
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .card ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .step {
+      position: relative;
+      padding: 22px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.05));
+      border: 1px solid rgba(255,255,255,.12);
+      overflow: hidden;
+    }
+
+    .step::before {
+      content: attr(data-step);
+      position: absolute;
+      right: 16px;
+      top: 10px;
+      font-size: 48px;
+      font-weight: 900;
+      color: rgba(255,255,255,.08);
+    }
+
+    .step b {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .cta-banner {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 18px;
+      align-items: center;
+      padding: 28px;
+      background: linear-gradient(135deg, rgba(47,211,255,.14), rgba(255,90,114,.16));
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+    }
+
+    .cta-banner h3 {
+      margin: 0 0 10px;
+      font-size: clamp(26px, 3vw, 40px);
+    }
+
+    .cta-banner p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.85;
+      font-size: 16px;
+    }
+
+    .cta-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    footer {
+      padding: 20px 0 34px;
+      color: #cde2ef;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .cta-banner,
+      .feature-grid,
+      .scene-grid,
+      .adv-grid,
+      .timeline {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .hero-copy,
+      .hero-visual { padding: 26px; }
+      .hero-visual { min-height: 560px; }
+    }
+
+    @media (max-width: 760px) {
+      header { position: static; }
+      .nav-wrap,
+      .hero-grid,
+      .feature-grid,
+      .scene-grid,
+      .adv-grid,
+      .timeline,
+      .cta-banner { grid-template-columns: 1fr; display: grid; }
+      .nav-wrap { gap: 16px; }
+      nav { justify-content: flex-start; }
+      .stats { grid-template-columns: 1fr; }
+      .hero-visual { min-height: 520px; padding: 18px; }
+      .hero-copy { padding: 22px; }
+      .slide-caption { right: 18px; left: 18px; bottom: 76px; }
+      .slide-caption .text { max-width: 100%; }
+      .patent-bar { bottom: 14px; left: 14px; gap: 8px; }
+      .patent-card { width: 56px; height: 72px; }
+      .cta-actions { justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="nav-wrap panel">
+        <div class="brandbox">
+          <div class="logo">水</div>
+          <div class="brandtext">
+            <h1>水安卫士</h1>
+            <p>全水域智能救援柜</p>
+          </div>
+        </div>
+        <nav>
+          <a href="#features">核心功能</a>
+          <a href="#advantage">产品优势</a>
+          <a href="#scenes">应用场景</a>
+          <a href="#flow">救援流程</a>
+          <a class="nav-cta" href="tel:18990952118">电话商议</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy panel">
+          <div class="eyebrow">智能监测 · 风险预警 · 远程联动 · 应急救援</div>
+          <h2>让每一处高风险水域，<span class="gradient-text">都有可视化守护</span></h2>
+          <p>
+            水安卫士将 AI 视觉识别、物联网感知、远程监管与专业救援装备整合进同一套系统中，
+            面向河道、湖泊、水库、景区、社区等多类场景，提供从风险发现、即时预警到现场处置与事后复盘的完整闭环，
+            把传统“发现晚、响应慢、救援难”的问题，升级为更主动、更精准、更高效的全水域安全守护方案。
+          </p>
+
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#features">查看产品亮点</a>
+            <a class="btn btn-red" href="tel:18990952118">电话商议</a>
+            <a class="btn btn-ghost" href="#scenes">查看应用场景</a>
+          </div>
+
+          <div class="stats">
+            <div class="stat">
+              <strong>7×24</strong>
+              <span>全天候智能巡检与风险监测</span>
+            </div>
+            <div class="stat">
+              <strong>云-边-端</strong>
+              <span>硬件、平台、移动端协同联动</span>
+            </div>
+            <div class="stat">
+              <strong>闭环处置</strong>
+              <span>预警、调度、救援、复盘一体化</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-visual panel">
+          <div class="carousel" aria-label="产品展示轮播">
+            <div class="slides">
+              <div class="slide active">
+                <img src="assets/image6.jpeg" alt="水安卫士产品展示图" />
+                <div class="slide-caption">
+                  <div class="text">
+                    <h3>智能救援柜前端部署</h3>
+                    <p>集成视频监测、设备存储、联动预警与现场应急能力，适合重点水域前端布防。</p>
+                  </div>
+                </div>
+              </div>
+              <div class="slide">
+                <img src="assets/image7.png" alt="水安卫士柜体效果图" />
+                <div class="slide-caption">
+                  <div class="text">
+                    <h3>应急装备可视化管理</h3>
+                    <p>救生设备集中存储、可控调用、取用更快，减少关键时刻“有设备却难以使用”的问题。</p>
+                  </div>
+                </div>
+              </div>
+              <div class="slide">
+                <img src="assets/image5.jpeg" alt="水域场景图" />
+                <div class="slide-caption">
+                  <div class="text">
+                    <h3>适配多类水域环境</h3>
+                    <p>可面向河湖、水库、池塘、景区滨水带等场景部署，提升日常防护与突发事件响应效率。</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="nav-arrows">
+              <button class="arrow prev" type="button" aria-label="上一页">‹</button>
+              <button class="arrow next" type="button" aria-label="下一页">›</button>
+            </div>
+
+            <div class="dots" aria-label="轮播页签">
+              <button class="dot active" type="button" aria-label="第1页"></button>
+              <button class="dot" type="button" aria-label="第2页"></button>
+              <button class="dot" type="button" aria-label="第3页"></button>
+            </div>
+
+            <div class="patent-bar" aria-label="证书与专利展示">
+              <div class="patent-label">成果展示</div>
+              <div class="patent-card"><img src="assets/image1.png" alt="成果图 1" /></div>
+              <div class="patent-card"><img src="assets/image2.png" alt="成果图 2" /></div>
+              <div class="patent-card"><img src="assets/image3.png" alt="成果图 3" /></div>
+              <div class="patent-card"><img src="assets/image4.png" alt="成果图 4" /></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <h2 class="section-title">核心功能</h2>
+        <p class="section-lead">
+          产品围绕“风险智能感知、预警即时推送、现场快速处置、数据持续优化”四个方向构建，
+          不只是一个设备，更是一套适合现代水域管理的智能应急协同系统。
+        </p>
+        <div class="feature-grid">
+          <article class="card">
+            <div class="feature-icon">👁️</div>
+            <h3>AI视觉识别</h3>
+            <p>通过前端视频分析能力，对靠近危险区域、违规下水、疑似溺水挣扎等高风险行为进行持续识别，提升发现效率。</p>
+          </article>
+          <article class="card">
+            <div class="feature-icon">📡</div>
+            <h3>多传感器监测</h3>
+            <p>联动水位与环境信息，支持异常变化监测与预警，帮助管理方提前掌握重点区域动态。</p>
+          </article>
+          <article class="card">
+            <div class="feature-icon">📲</div>
+            <h3>远程可视化监管</h3>
+            <p>支持手机端与网页后台协同管理，现场画面远程查看、风险判断、处置联动更直接。</p>
+          </article>
+          <article class="card">
+            <div class="feature-icon">🛟</div>
+            <h3>专业装备联动</h3>
+            <p>救生圈、救生衣等设备集中管理，出现警情时更快触达现场，提高处置效率，降低二次风险。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="advantage">
+      <div class="container">
+        <h2 class="section-title">产品优势</h2>
+        <p class="section-lead">
+          相比单一摄像头、人工巡逻或传统露天救生设备，水安卫士更强调“前端布防 + 智能判断 + 实时联动 + 数据复盘”的整体能力。
+        </p>
+        <div class="adv-grid">
+          <article class="card">
+            <h4>从被动响应到主动预警</h4>
+            <ul>
+              <li>提前感知人员靠近与水域异常</li>
+              <li>缩短发现到处置的时间差</li>
+              <li>帮助把握关键救援窗口</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h4>从碎片管理到全链闭环</h4>
+            <ul>
+              <li>打通监测、预警、调度与救援环节</li>
+              <li>兼顾前端设备与后台指挥中心</li>
+              <li>支持过程留痕与复盘优化</li>
+            </ul>
+          </article>
+          <article class="card">
+            <h4>从单点设备到规模化部署</h4>
+            <ul>
+              <li>适配景区、社区、河湖水库等场景</li>
+              <li>适合政府、消防、物业、运营单位</li>
+              <li>兼具部署价值与后续运维价值</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="scenes">
+      <div class="container">
+        <h2 class="section-title">应用场景</h2>
+        <p class="section-lead">
+          针对高风险、人员流动大、人工巡检压力大的水域场景，水安卫士能够作为前端智能节点快速部署，形成更稳定的日常安全防线。
+        </p>
+        <div class="scene-grid">
+          <article class="card"><h4>河道与湖泊</h4><p>面向城市河道、自然湖泊等开放环境，提升日常监测密度与风险提示效率。</p></article>
+          <article class="card"><h4>水库与池塘</h4><p>适用于重点监控水域，减少盲区与响应延迟，强化重点时期的安全守护能力。</p></article>
+          <article class="card"><h4>景区与滨水步道</h4><p>在人流量大的文旅场景中，兼顾形象展示、风险提醒与突发事件联动处置。</p></article>
+          <article class="card"><h4>社区与校园周边</h4><p>围绕重点人群活动区域，提升预防性管理能力，尤其适合暑期与高温时段加强防护。</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="flow">
+      <div class="container">
+        <h2 class="section-title">智能救援流程</h2>
+        <p class="section-lead">
+          系统以更短的路径完成从异常识别到现场行动的协同，让管理端看得见、通知更快、装备更快到位、处置过程更清晰。
+        </p>
+        <div class="timeline">
+          <article class="step" data-step="01">
+            <b>风险识别</b>
+            <p>摄像头与传感器持续工作，对异常行为与环境变化进行实时发现。</p>
+          </article>
+          <article class="step" data-step="02">
+            <b>即时预警</b>
+            <p>异常信息快速推送到管理端与移动端，便于第一时间研判与确认。</p>
+          </article>
+          <article class="step" data-step="03">
+            <b>快速联动</b>
+            <p>现场人员结合救援柜内专业装备开展处置，提升到场效率与执行效率。</p>
+          </article>
+          <article class="step" data-step="04">
+            <b>数据复盘</b>
+            <p>事件过程自动留痕，支持后续分析、布防优化与管理决策升级。</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta-banner">
+          <div>
+            <h3>想了解部署方案、合作方式或现场演示？</h3>
+            <p>
+              欢迎直接电话联系。可结合部署场景、管理需求与预算方向，沟通更适合的配置方案、合作方式与实施路径。
+            </p>
+          </div>
+          <div class="cta-actions">
+            <a class="btn btn-red" href="tel:18990952118">电话商议：18990952118</a>
+            <a class="btn btn-primary" href="#features">继续浏览产品</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    水安卫士 · 全水域智能救援柜
+  </footer>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const dots = Array.from(document.querySelectorAll('.dot'));
+    const prevBtn = document.querySelector('.arrow.prev');
+    const nextBtn = document.querySelector('.arrow.next');
+    let current = 0;
+    let timer = null;
+
+    function showSlide(index) {
+      current = (index + slides.length) % slides.length;
+      slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
+      dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+    }
+
+    function nextSlide() { showSlide(current + 1); }
+    function prevSlide() { showSlide(current - 1); }
+
+    function startAutoplay() {
+      stopAutoplay();
+      timer = setInterval(nextSlide, 4200);
+    }
+
+    function stopAutoplay() {
+      if (timer) clearInterval(timer);
+    }
+
+    nextBtn.addEventListener('click', () => { nextSlide(); startAutoplay(); });
+    prevBtn.addEventListener('click', () => { prevSlide(); startAutoplay(); });
+    dots.forEach((dot, i) => dot.addEventListener('click', () => { showSlide(i); startAutoplay(); }));
+
+    const carousel = document.querySelector('.carousel');
+    carousel.addEventListener('mouseenter', stopAutoplay);
+    carousel.addEventListener('mouseleave', startAutoplay);
+    carousel.addEventListener('touchstart', stopAutoplay, { passive: true });
+    carousel.addEventListener('touchend', startAutoplay, { passive: true });
+
+    showSlide(0);
+    startAutoplay();
+  </script>
+</body>
+</html>
